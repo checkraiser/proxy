@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    
+    <title>tags</title>
+    <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <script type="text/javascript" src="js/jquery.min.js"></script>     
+    
+    
+    <script type="text/javascript" src="js/d3.v2.min.js"></script>
+    
+    
+    <script type="text/javascript">
+    
+    $(document).ready(function() {
+        
+      $(window).resize(function() {$('.resizable').resize(); });
+    });
+    </script>   
+    
+    <style type="text/css">
+      circle.node {
+        stroke: #fff;
+        stroke-width: 1.5px;
+      }
+      line.link {
+        stroke: #000;
+        stroke-width: 1.5px;
+      }
+	  input {
+		font-size: 80px;
+	  }
+	 
+    marker#arrow {
+    fill: #666;
+  }
+  img {
+    padding-left: 0px;
+  }
+    </style>
+    
+  </head>
+<body>
+	
+
+    
+    <div class="navbar navbar-fixed-top">
+         <div class="navbar-inner">
+        <div class="container">
+            <div class="input-append">
+            <input type="text" id="msv"  placeholder="Mã sinh viên"></input>
+           <button id="btn" class="btn btn-large" type="button">Go!</button>
+           <a href="#myModal" role="button" class="btn" data-toggle="modal">Help</a>
+        </div>
+        </div>
+     
+    </div>
+    </div>
+   
+     
+
+    <div id="myModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h3 id="myModalLabel">Modal header</h3>
+</div>
+<div class="modal-body">
+<img src="img/huongdan.jpg" />
+</div>
+<div class="modal-footer">
+<button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+<button class="btn btn-primary">Save changes</button>
+</div>
+</div>
+</div>
+	 
+    <div>
+    <svg id="tags" width="100%" height="5000" >
+    </svg>
+  </div>
+  <script type="text/javascript" src="js/main.js"></script>
+ <script src="js/bootstrap.min.js"></script>
+    
+   
+     
+
+</body>
+</html>

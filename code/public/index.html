@@ -1,0 +1,346 @@
+<!DOCTYPE html>   
+<html lang="en">   
+<head>   
+<meta charset="utf-8">   
+<title>Hệ thống hỗ trợ đăng kí môn học</title>   
+<meta name="description" content="Kiểm tra điều kiện môn học và điều kiện đăng ký thực tập tốt nghiệp">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+<link href="css/bootstrap.min.css" rel="stylesheet">   
+  <script type="text/javascript" src="js/d3.v2.min.js"></script>
+  <script type="text/javascript" src="js/mustache.js"></script>
+  
+  <script id="tttnTmpl" type="text/mustache">
+	{{#danhsach}}
+	{{#key.tuchon}}<h3>Trước khi kiểm tra, đề nghị bạn đăng ký các nhóm môn tự chọn</h3>{{/key.tuchon}}
+	<div class="accordion-group">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion3" href="#tt{{stt}}">
+					{{#key.ten}}
+					<h3>Nhóm tự chọn {{key.ten}}:</h3> <h4>(Tổng số môn: {{key.somontuchon}} môn, Bắt buộc: {{key.tongso}}  môn
+					, <span style="color:#FF0000">Chưa đăng ký hoặc chưa học</span>: {{key.thieu}} môn, 	<span style="color:#009900">Đã học </span>: {{key.current}} môn) </h4>						 
+					{{/key.ten}}
+					{{^key.ten}}
+					<h3>Nhóm 1:</h3> <h4>(Tổng số môn: {{key.tongso}} môn, <span style="color:#FF0000">Chưa đăng ký hoặc chưa học</span>: {{key.thieu}} môn, 	<span style="color:#009900">Đã học</span>: {{key.current}} môn)		</h4>			
+					{{/key.ten}}					
+						        <div class="progress progress-striped">
+  <div class="bar bar-success" style="width: {{key.percent}}%;"></div>
+						    	<div class="bar bar-danger" style="width: {{key.percentthieu}}%;"></div>
+    </div>
+				</a>
+				</div>
+				<div id="tt{{stt}}" class="accordion-body collapse">
+				<div class="accordion-inner">
+					{{#value}}										
+						
+						{{#dsmondahoc}}						
+						<a class="btn" style="font-size:18px;font-weight:bold;color:{{color}}">{{name}}</a>
+						{{/dsmondahoc}}
+						{{#dsmonno}}						
+						<a class="btn" style="font-size:18px;font-weight:bold;color:{{color}}">{{name}}</a>
+						{{/dsmonno}}
+					{{/value}}					
+				</div>
+				</div>
+			</div>
+		{{/danhsach}}
+		{{^danhsach}}
+		<h3>Bạn đã đủ điều kiện đăng ký thực tập tốt nghiệp.</h3>
+		{{/danhsach}}
+</script>
+
+<script id="ltnTmpl" type="text/mustache">
+	{{#danhsach}}
+	{{#key.tuchon}}<h3>Trước khi kiểm tra, đề nghị bạn đăng ký các nhóm môn tự chọn</h3>{{/key.tuchon}}
+	<div class="accordion-group">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion4" href="#ltn{{stt}}">
+					{{#key.ten}}
+					<h3>Nhóm tự chọn {{key.ten}}:</h3> <h4>(Tổng số môn: {{key.somontuchon}} môn, Bắt buộc: {{key.tongso}}  môn
+					, <span style="color:#FF0000">Chưa qua</span>: {{key.thieu}} môn, 	<span style="color:#009900">Đã qua </span>: {{key.current}} môn) </h4>						 
+					{{/key.ten}}
+					{{^key.ten}}
+					<h3>Nhóm 1:</h3> <h4>(Tổng số môn: {{key.tongso}} môn, <span style="color:#FF0000">Chưa qua</span>: {{key.thieu}} môn, 	<span style="color:#009900">Đã qua</span>: {{key.current}} môn)		</h4>			
+					{{/key.ten}}					
+						        <div class="progress progress-striped">
+  <div class="bar bar-success" style="width: {{key.percent}}%;"></div>
+						    	<div class="bar bar-danger" style="width: {{key.percentthieu}}%;"></div>
+    </div>
+				</a>
+				</div>
+				<div id="ltn{{stt}}" class="accordion-body collapse">
+				<div class="accordion-inner">
+					{{#value}}										
+						{{#dsmondahoc}}						
+						<a class="btn" style="font-size:18px;font-weight:bold;color:{{color}}">{{name}}</a>
+						{{/dsmondahoc}}
+						{{#dsmonno}}						
+						<a class="btn" style="font-size:18px;font-weight:bold;color:{{color}}">{{name}}</a>
+						{{/dsmonno}}
+					{{/value}}					
+				</div>
+				</div>
+			</div>
+		{{/danhsach}}
+		{{^danhsach}}
+		<h3>Bạn đã đủ điều kiện đăng ký làm tốt nghiệp.</h3>
+		{{/danhsach}}
+</script>
+
+<script id="othercoursesTmpl" type="text/mustache">
+	{{#other}}
+	<div class="accordion-group">
+				<div class="accordion-heading">
+				<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#{{stt}}">
+					{{#key}}
+					<h3>Nhóm {{key}}</h3>
+					{{/key}}
+					{{^key}}
+					<h3>Nhóm khác</h3>
+					{{/key}}
+				</a>
+				</div>
+				<div id="{{stt}}" class="accordion-body collapse">
+				<div class="accordion-inner">
+					{{#value}}
+						<a class="btn" style="font-size:18px;font-weight:bold;color:{{color}}" data-html="text" data-placement="top" rel="tooltip" href="#" title="Mã môn:		{{mamon}}&#013; Môn thay thế {{thaythe}}&#013; Số tín chỉ:	{{dvht}}&#013; Điểm: {{diem}}&#013; Khối kiến thức:		{{khoikienthuc}} &#013; Nhóm tự chọn:	{{tuchon}} &#013; Tên nhóm:	 {{tennhom}} &#013;">{{name}}</a>
+					{{/value}}					
+				</div>
+				</div>
+			</div>
+		{{/other}}
+</script>
+  <style type="text/css">
+      circle.node {
+        stroke: #fff;
+        font-size: 24px;
+        stroke-width: 1px;
+      }
+      line.link {
+        stroke: #123;
+        stroke-width: 1px;
+        stroke-opacity: .6;
+      }
+	  #mainbody {
+	  	height:500px;	
+	  		
+	  	overflow:scroll;
+	  }
+
+	  #tags {
+	  	height:4000px;
+  		width:4000px;
+	  	
+	  }
+	 #othercourses {
+	 	font-weight: bold;
+	 	font-size: 30px;	 		 	
+	 }
+	 #maincontent{
+	 	margin-top:10px;
+	 }
+
+	  #mynavbar {
+	  	background-color: #3B5998;
+	  }
+	  .modal-body {
+		max-height: 800px;
+		 max-width: 80%;
+	}
+	.kodk {
+		font-size: 20px;
+	}
+	.input-mysize { width: 200px; height: 100px; }
+	.navbar-inner {margin: 0 auto; }
+	#btnltn, #btntn, #monkhac, #msv,#btn, #btnhssv,#btnhelp { margin-top:30px; margin-left:30px; }
+	#hssvinner {
+		margin-top:30px;
+	}
+	#ttlh {
+		font-size: 20px;
+		font-weight: bold;
+		color: blue;
+		margin-bottom: 5px;
+	}
+	.myModal{
+   width:80%;
+   margin-left:-40%; 
+	margin-top:-25%;
+	text-align: center;
+	}
+	.myModal2{
+	  width:80%;
+	   margin-left:-40%; 
+		margin-top:-25%;
+		text-align: center;
+	}
+	.myModal3{
+   width:80%;
+   margin-left:-40%; 
+	margin-top:-25%;
+	text-align: center;
+	}
+	.myModal4{
+   width:80%;
+   margin-left:-40%; 
+	margin-top:-25%;
+	text-align: center;
+	}
+</style>
+</head>  
+<body>  
+ 
+  
+
+<div class="container-fluid">
+ <div class="navbar navbar-fixed-top" id="mynavbar">
+         <div class="navbar-inner" >
+		        <div class="container-fluid" id="maincontent">
+		        	<a href="http://dieukien.hpu.edu.vn"><img class="pull-left" src="img/hpu.png"></img></a>
+	            	<div class="input-append offset3">		       
+			                <form class="navbar-search  pull-left">
+					    <input type="text" id="msv" class="input-mysize search-query" placeholder="Mã sinh viên">					    		
+					    </form>
+					   
+					  <button id="btn" class="btn-primary btn-large pull-left">Kiểm tra</button>
+						<button id="btnhssv" class="btn-primary btn-large pull-left">Hồ sơ</button>
+						<button id="monkhac" href="#myModal2" class="btn-primary btn-large pull-left" data-toggle="modal">Các môn khác</button>
+						<button id="btntn" href="#myModal3" class="btn-primary btn-large pull-left" data-toggle="modal">TTTN</button>
+						<button id="btnltn" href="#myModal4" class="btn-primary btn-large pull-left" data-toggle="modal">TN</button>
+					<div class="btn-group dropdown pull-right" id="btnhelp">
+    			
+				    <button class="btn-large btn-success dropdown-toggle " data-toggle="dropdown">
+				    	<span>Help</span><span class="caret"></span>
+				    </button>
+				    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+								    <li><a tabindex="-1" href="#myModal" data-toggle="modal">Giải thích các màu</a></li>
+								    <li><a tabindex="-1" href="#myModal2" data-toggle="modal">Các môn không có điều kiện ràng buộc</a></li>						   
+									<li><a tabindex="-1" href="#myModal3" data-toggle="modal">Kiểm tra điều kiện thực tập tốt nghiệp</a></li>
+								    <li><a tabindex="-1" href="#myModal4" data-toggle="modal">Kiểm tra điều kiện làm tốt nghiệp</a></li>						   
+									
+					</ul>  
+    				</div>		    
+		       </div>
+ 				           
+ 	       </div>
+	           
+		<div class="navbar-inner hide" id="hssv">
+			<div class="container-fluid" id="hssvinner">
+				<div class="row-fluid span12">
+  					<div class="span4">
+  					</div>
+  					
+  					<div class="span4">
+  							<p><span>Mã sinh viên:</span><span id="masinhvien"></span></p>
+  							<p><span>Họ và tên:</span><span id="hovaten"></span></p>
+  							<p><span>Lớp:</span><span id="malop"></span></p>
+  							<p><span>Giới tính:</span><span id="gioitinh"></span></p>
+  							<p><span>Ngành đào tạo:</span><span id="tennganh"></span></p>
+  					</div>
+
+  					<div class="span4">
+  						<p><span>Hệ đào tạo:</span><span id="tenhedaotao"></span></p>
+  						<p><span>Tình trạng:</span><span id="tinhtrang"></span></p>
+  						<p><span>Khóa học:</span><span id="khoahoc"></span></p>
+  						<p><span>Hình thức đào tạo:</span><span id="daotao"></span></p>
+  					</div>
+
+
+				</div>
+
+			</div>
+
+		</div>         	   
+		
+       </div>
+			          
+	</div>  
+	<div class="container-fluid" >
+		
+		<div class="row-fluid" id="main">
+				
+			<div id="aaa" class="span12">
+				
+				 <svg id="tags" >
+		    		</svg>	   
+
+		    		<canvas id="svg-canvas"></canvas>
+			</div>
+
+			
+		</div>
+		
+	</div>
+	
+</div>
+<div class="modal hide fade myModal" id="myModal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Hướng dẫn đăng kí môn học</h3>
+	<h4 style="color:red;">Hệ thống đang xây dựng và thử nghiệm, thông tin chỉ có giá trị tham khảo.</h4>
+  </div>
+  <div class="modal-body">
+  <div id="ttlh">				
+    <img src="img/huongdananh2.jpg" width="75%" />
+<p>Phần mềm chạy tốt nhất với các trình duyệt sau:
+			Opera 9.5, Firefox 16.x, Chrome 15.x, IE 9, Safari và Javascript enabled</p>
+			<p>Thông tin liên hệ: Trương Hoàng Dũng - dungth@hpu.edu.vn	 </p>   </div>	    
+  </div>
+ 
+</div>
+ 
+<div class="modal hide fade myModal2" id="myModal2">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Các môn học không có điều kiện ràng buộc:</h3>
+  </div>
+  <div class="modal-body">
+    <div class="accordion" id="accordion2">
+						
+		</div>
+  </div>
+ 
+</div>
+
+<div class="modal hide fade myModal3" id="myModal3">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Điều kiện đăng ký thực tập tốt nghiệp:</h3>
+  </div>
+  <div class="modal-body">
+    <div class="accordion" id="accordion3">
+						
+		</div>
+  </div>
+</div>
+ <div class="modal hide fade myModal4" id="myModal4">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Kiểm tra điều kiện làm tốt nghiệp :</h3>
+  </div>
+  <div class="modal-body">
+    <div class="accordion" id="accordion4">
+						
+		</div>
+  </div>
+<script src="js/jquery.js"></script>  
+ <script src="js/autocomplete.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js"></script>  
+<script src="js/score.js"></script>  
+<script src="js/main2.js"></script>
+
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-13079296-8']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</body>  
+</html>  

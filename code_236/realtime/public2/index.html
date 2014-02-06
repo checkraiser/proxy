@@ -1,0 +1,24 @@
+<html>
+<head>
+    <title>PubSub</title>
+    <script src="http://localhost:8000/socket.io/socket.io.js"></script>
+    <script src="/js/jquery.js"></script>
+</head>
+<body>
+    <div id="content">...</div>
+    <script>    
+     
+            var socket =  io.connect('http://localhost:8000');
+	    console.log(socket);
+            var content = $('#content');
+           
+
+            socket.on('message', function(message){		
+                content.prepend(message.hello + '<br />');
+            }) ;
+
+            
+        
+    </script>
+</body>
+</html>
